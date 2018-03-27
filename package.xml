@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+    <name>occlusion_detection</name>
+    <version>0.0.1</version>
+    <description>
+        Render camera image to determine if gripper is occluded by arm.
+    </description>
+
+    <url type="repository">WEBSITE</url>
+
+    <maintainer email="edwardahn@cmu.edu">Edward Ahn</maintainer>
+    <license>UNRELEASED</license>
+
+    <author email="edwardahn@cmu.edu">Edward Ahn</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <build_depend>offscreen_render</build_depend>
+    <build_depend>rospy</build_depend>
+
+    <run_depend>offscreen_render</run_depend>
+    <run_depend>rospy</run_depend>
+
+</package>
