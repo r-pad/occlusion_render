@@ -107,14 +107,7 @@ class OcclusionDetectorNode:
         self.detector.set_joint_angles(joint_angles)
 
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description='Occlusion Detector Argument Parser')
-    parser.add_argument('--disp', dest='disp', type=int, default=1)
-    return parser.parse_args()
-
-
 if __name__ == '__main__':
-    args = parse_arguments()
-    node = OcclusionDetectorNode(args.disp)
+    show_render = rospy.get_param('show_render')
+    node = OcclusionDetectorNode(show_render)
     node.spin()
