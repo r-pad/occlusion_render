@@ -15,6 +15,7 @@
 
     <buildtool_depend>catkin</buildtool_depend>
 
+    <build_depend>cv_bridge</build_depend>
     <build_depend>offscreen_render</build_depend>
     <build_depend>rospy</build_depend>
     <build_depend>sensor_msgs</build_depend>

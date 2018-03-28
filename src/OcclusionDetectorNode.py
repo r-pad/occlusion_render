@@ -14,9 +14,14 @@ import argparse
 import message_filters
 import rospkg
 import rospy
+from cv_bridge import CvBridge
 from sensor_msgs.msg import Image, CameraInfo, JointState
 
 from OcclusionDetector import OcclusionDetector
+
+
+import matplotlib.pyplot as plt
+import sys
 
 
 class OcclusionDetectorNode:
@@ -29,6 +34,7 @@ class OcclusionDetectorNode:
         """
         Initialize and run node responsible for occlusion detection.
         """
+        self.bridge = CvBridge()
         rospy.init_node('occlusion_detector')
 
         # Instantiate OcclusionDetector object
@@ -60,7 +66,24 @@ class OcclusionDetectorNode:
 
 
     def image_callback(self, image, camera_info):
-        self.detector.get_rendered_image()
+        """
+        Change intrinsics of camera and render camera's image view.
+
+        Args:
+            image: Image that the camera actually sees (ground truth)
+            camera_info: Camera information (ex. intrinsics)
+        """
+        image = self.bridge.imgmsg_to_cv2(image, 'bgr8')
+
+        # Plot real image against rendered image
+        render = self.detector.get_rendered_image()
+        fig = plt.figure()
+        ax1 = fig.add_subplot(1,2,0)
+        ax1.imshow(image)
+        ax2 = fig.add_subplot(1,2,1)
+        ax2.imshow(render, origin='lower')
+        plt.show()
+        plt.hold(True)
 
 
     def joints_callback(self, joint_state):
