@@ -41,7 +41,7 @@ class OcclusionDetector:
         self.show_render = show_render
 
 
-    def setup_sensor(self, intrinsics):
+    def setup_sensor(self, intrinsics): ####### Not using intrinsics atm ######
         """
         Create camera sensor using offscreen_render and set its
         extrinsics and intrinsics.
@@ -54,8 +54,8 @@ class OcclusionDetector:
                 'offscreen_render_camera')
 
         # Set intrinsics/resolution and turn sensor on
-        self.sensor.SendCommand('setintrinsic 529 525 328 267 0.01 10')
-        self.sensor.SendCommand('setdims 640 480')
+        self.sensor.SendCommand('setintrinsic 408 408 640 400 0.01 10')
+        self.sensor.SendCommand('setdims 1280 800')
         self.sensor.Configure(Sensor.ConfigureCommand.PowerOn)
         self.sensor.SendCommand('addbody sawyer 255 0 0')
 
@@ -71,33 +71,31 @@ class OcclusionDetector:
         """
         print 'Robot name: ', self.robot.GetName()
         print 'DOF Values: ', self.robot.GetDOFValues()
-        for index, link in enumerate(robot.GetLinks()):
+        for index, link in enumerate(self.robot.GetLinks()):
             print 'Link %d: %s' % (index, link.GetName())
-
-
-    def set_joint_angle(self, angle, index):
-        """
-        Set new joint angle for particular joint.
-
-        Args:
-            angle: Net joint angle
-            index: Joint to be modified.
-        """
-        if index >= self.robot.GetDOF():
-            raise ValueError('Invalid degree of freedom')
-        self.robot.SetDOFValues([angle], [index])
 
 
     def set_joint_angles(self, angles):
         """
-        Set new joint angles for all joints.
+        Set new angles for all joint angles and camera head pan. Note
+        that OpenRAVE wants these angles in the form of:
+            [j0, head_pan, j1, j2, j3, j4, j5, j6]
 
         Args:
-            angles: List of all new joint angles
+            angles: List of all new joint angles, in the order
+                [head_pan, j0, j1, j2, j3, j4, j5, j6]
         """
         if len(angles) != self.robot.GetDOF():
             raise ValueError('Incorrect number of angles inputted')
+        head_pan = angles[1]
+        angles[1] = angles[0]
+        angles[0] = head_pan
         self.robot.SetDOFValues(angles)
+
+        # Set extrinsics (camera head pan angle)
+        links = self.robot.GetLinks()
+        tf = links[OcclusionDetector.camera_link_index].GetTransform()
+        self.sensor.SetTransform(tf)
 
 
     def get_rendered_image(self):

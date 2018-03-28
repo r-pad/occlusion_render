@@ -39,10 +39,14 @@ class OcclusionDetectorNode:
 
         # Instantiate OcclusionDetector object
         pkg_path = rospkg.RosPack().get_path('occlusion_detection')
-        sawyer_dae = '%s/data/sawyer.dae' % pkg_path
+        sawyer_dae = '%s/models/sawyer.dae' % pkg_path
         self.detector = OcclusionDetector(sawyer_dae, show_render)
 
         self.detector.setup_sensor(0)
+
+
+        self.count = 0
+
 
         # Register callback subscribing to image and camera info
         image_sub = message_filters.Subscriber(
@@ -73,17 +77,20 @@ class OcclusionDetectorNode:
             image: Image that the camera actually sees (ground truth)
             camera_info: Camera information (ex. intrinsics)
         """
+        print 'Processing image %d...' % self.count
         image = self.bridge.imgmsg_to_cv2(image, 'bgr8')
 
         # Plot real image against rendered image
         render = self.detector.get_rendered_image()
-        fig = plt.figure()
+        fig = plt.gcf()
         ax1 = fig.add_subplot(1,2,0)
         ax1.imshow(image)
         ax2 = fig.add_subplot(1,2,1)
         ax2.imshow(render, origin='lower')
-        plt.show()
-        plt.hold(True)
+        plt.savefig('fig%d.png' % self.count)
+        self.count += 1
+        #plt.show()
+        #plt.hold(True)
 
 
     def joints_callback(self, joint_state):
@@ -92,7 +99,7 @@ class OcclusionDetectorNode:
 
         Args:
             joint_state: A list of joint angles and gripper angle.
-                Note that the gripper angle (last entry to this list)
+                Note that the torso angle (last entry to this list)
                 is ignored.
         """
         positions = joint_state.position
