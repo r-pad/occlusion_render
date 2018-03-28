@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 @author: edwardahn
+
+This file defines the class OcclusionDetector, which lets users
+view a camera-rendered image for the purpose of spotting occlusions
+to the end effector.
 """
 
 import matplotlib.pyplot as plt
@@ -108,15 +112,6 @@ class OcclusionDetector:
         if self.show_render:
             plt.imshow(img, origin='lower')
             plt.show()
+            plt.hold(True)
         return img
 
-
-def main():
-    oc = OcclusionDetector('/home/edwardahn/Documents/modules/occlusion\
-/src/sawyer_robot/sawyer_description/urdf/sawyer.dae', True)
-    oc.setup_sensor(0)
-    img = oc.get_rendered_image()
-
-
-if __name__ == '__main__':
-    main()
