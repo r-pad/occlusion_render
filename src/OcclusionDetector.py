@@ -21,9 +21,6 @@ class OcclusionDetector:
     possible to see what parts of the arm occlude the end effector.
     """
 
-    # Link index for head camera of Sawyer
-    camera_link_index = 8
-
 
     def __init__(self, sawyer_dae):
         """
@@ -40,6 +37,17 @@ class OcclusionDetector:
         self.sensor = None
 
 
+    def _set_camera_extrinsics(self):
+        """
+        Set head camera's pan angle.
+        """
+        camera_link_index = 8
+        links = self.robot.GetLinks()
+        tf = links[camera_link_index].GetTransform()
+        tf[0,3] = tf[0,3] + 0.01
+        self.sensor.SetTransform(tf)
+
+
     def setup_sensor(self, intrinsics): ####### Not using intrinsics atm ######
         """
         Create camera sensor using offscreen_render and set its
@@ -51,17 +59,11 @@ class OcclusionDetector:
         """
         self.sensor = RaveCreateSensor(self.env,
                 'offscreen_render_camera')
-
-        # Set intrinsics/resolution and turn sensor on
         self.sensor.SendCommand('setintrinsic 408 408 640 400 0.01 10')
-        self.sensor.SendCommand('setdims 1280 800')
+        self.sensor.SendCommand('setdims 1280 800') # resolution
         self.sensor.Configure(Sensor.ConfigureCommand.PowerOn)
         self.sensor.SendCommand('addbody sawyer 255 0 0')
-
-        # Set extrinsics
-        links = self.robot.GetLinks()
-        tf = links[OcclusionDetector.camera_link_index].GetTransform()
-        self.sensor.SetTransform(tf)
+        self._set_camera_extrinsics()
 
 
     def print_robot_info(self):
@@ -90,11 +92,7 @@ class OcclusionDetector:
         angles[1] = angles[0]
         angles[0] = head_pan
         self.robot.SetDOFValues(angles)
-
-        # Set extrinsics (camera head pan angle)
-        links = self.robot.GetLinks()
-        tf = links[OcclusionDetector.camera_link_index].GetTransform()
-        self.sensor.SetTransform(tf)
+        self._set_camera_extrinsics()
 
 
     def get_rendered_image(self):
