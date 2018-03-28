@@ -21,7 +21,6 @@ from OcclusionDetector import OcclusionDetector
 
 
 import matplotlib.pyplot as plt
-import sys
 
 
 class OcclusionDetectorNode:
@@ -34,13 +33,14 @@ class OcclusionDetectorNode:
         """
         Initialize and run node responsible for occlusion detection.
         """
+        self.show_render = show_render
         self.bridge = CvBridge()
         rospy.init_node('occlusion_detector')
 
         # Instantiate OcclusionDetector object
-        pkg_path = rospkg.RosPack().get_path('occlusion_detection')
-        sawyer_dae = '%s/models/sawyer.dae' % pkg_path
-        self.detector = OcclusionDetector(sawyer_dae, show_render)
+        self.pkg_path = rospkg.RosPack().get_path('occlusion_detection')
+        sawyer_dae = '%s/models/sawyer.dae' % self.pkg_path
+        self.detector = OcclusionDetector(sawyer_dae)
 
         self.detector.setup_sensor(0)
 
@@ -87,10 +87,11 @@ class OcclusionDetectorNode:
         ax1.imshow(image)
         ax2 = fig.add_subplot(1,2,1)
         ax2.imshow(render, origin='lower')
-        plt.savefig('fig%d.png' % self.count)
+        path = '%s/results/fig%d.png' % (self.pkg_path, self.count)
+        plt.savefig(path)
         self.count += 1
-        #plt.show()
-        #plt.hold(True)
+        if self.show_render:
+            plt.show()
 
 
     def joints_callback(self, joint_state):

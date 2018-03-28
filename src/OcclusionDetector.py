@@ -25,7 +25,7 @@ class OcclusionDetector:
     camera_link_index = 8
 
 
-    def __init__(self, sawyer_dae, show_render):
+    def __init__(self, sawyer_dae):
         """
         Instantiates the OcclusionDetector class and initializes
         the OpenRAVE environment.
@@ -38,7 +38,6 @@ class OcclusionDetector:
             self.env.Load(sawyer_dae)
             self.robot = self.env.GetRobots()[0]
         self.sensor = None
-        self.show_render = show_render
 
 
     def setup_sensor(self, intrinsics): ####### Not using intrinsics atm ######
@@ -106,10 +105,5 @@ class OcclusionDetector:
             raise RuntimeError('Sensor not set up')
         self.sensor.SimulationStep(0.01)
         data = self.sensor.GetSensorData()
-        img = data.imagedata
-        if self.show_render:
-            plt.imshow(img, origin='lower')
-            plt.show()
-            plt.hold(True)
-        return img
+        return data.imagedata
 
