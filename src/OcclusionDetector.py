@@ -44,7 +44,6 @@ class OcclusionDetector:
         camera_link_index = 8
         links = self.robot.GetLinks()
         tf = links[camera_link_index].GetTransform()
-        tf[0,3] = tf[0,3] + 0.01
         self.sensor.SetTransform(tf)
 
 
