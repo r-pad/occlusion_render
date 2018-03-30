@@ -24,4 +24,5 @@ The results below show the image from the camera on the left, and the rendering 
 ![alt text](results/result3.png?raw=true "Sample Result 3")
 
 ## Future Work
-We intend to develop the package [occlusion_detect](https://github.com/r-pad/occlusion_detect), which will subscribe to the rendered images to produce a binary output determining whether the end effector is too occluded in an image to be useful for other purposes.
+* We want to use a depth map produced by [range_image_registration](https://github.com/personalrobotics/range_image_registration) to display depth information on the rendered image.
+* We intend to develop the package [occlusion_detect](https://github.com/r-pad/occlusion_detect), which will subscribe to the rendered images to produce a binary output determining whether the end effector is too occluded in an image to be useful for other purposes.
