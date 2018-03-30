@@ -17,7 +17,7 @@ roslaunch occlusion_render render.launch
 ```
 
 ## Sample Results
-The results below show the image from the camera on the left, and the rendering produced by this package on the right.
+The results below show the rendering produced by this package on the left, and the actual image taken by the camera on the right.
 
 ![alt text](results/result1.png?raw=true "Sample Result 1")
 ![alt text](results/result2.png?raw=true "Sample Result 2")
