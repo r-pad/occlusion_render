@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-    <name>occlusion_detection</name>
+    <name>occlusion_render</name>
     <version>0.0.1</version>
     <description>
         Render camera image to determine if gripper is occluded by arm.

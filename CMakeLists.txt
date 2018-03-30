@@ -3,7 +3,7 @@
 # Edward Ahn
 #
 cmake_minimum_required(VERSION 2.8.3)
-project(occlusion_detection)
+project(occlusion_render)
 
 find_package(catkin REQUIRED COMPONENTS
     cv_bridge

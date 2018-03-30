@@ -1,7 +1,7 @@
 <launch>
     <arg name="show_render" default="1"/>
     <param name="show_render" value="$(arg show_render)"/>
-    <node pkg="occlusion_detection" name="occlusion_detector"
-        type="OcclusionDetectorNode.py" output="screen"
+    <node pkg="occlusion_render" name="occlusion_renderer"
+        type="OcclusionRendererNode.py" output="screen"
         respawn="true"/>
 </launch>

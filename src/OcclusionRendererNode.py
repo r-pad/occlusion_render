@@ -5,7 +5,7 @@
 
 This file implements a ROS node that takes in camera and joint angle
 information to spot occlusions to the end effector by the arm.
-Internally, the class OcclusionDetector is used to render output
+Internally, the class OcclusionRenderer is used to render output
 images.
 """
 
@@ -17,32 +17,32 @@ import rospy
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image, CameraInfo, JointState
 
-from OcclusionDetector import OcclusionDetector
+from OcclusionRenderer import OcclusionRenderer
 
 
 import matplotlib.pyplot as plt
 
 
-class OcclusionDetectorNode:
+class OcclusionRendererNode:
     """
-    This class is a wrapper to the OcclusionDetector class that
+    This class is a wrapper to the OcclusionRenderer class that
     handles ROS functionality.
     """
 
     def __init__(self, show_render):
         """
-        Initialize and run node responsible for occlusion detection.
+        Initialize and run node responsible for occlusion rendering.
         """
         self.show_render = show_render
         self.bridge = CvBridge()
-        rospy.init_node('occlusion_detector')
+        rospy.init_node('occlusion_renderer')
 
-        # Instantiate OcclusionDetector object
-        self.pkg_path = rospkg.RosPack().get_path('occlusion_detection')
+        # Instantiate OcclusionRenderer object
+        self.pkg_path = rospkg.RosPack().get_path('occlusion_render')
         sawyer_dae = '%s/models/sawyer.dae' % self.pkg_path
-        self.detector = OcclusionDetector(sawyer_dae)
+        self.renderer = OcclusionRenderer(sawyer_dae)
 
-        self.detector.setup_sensor(0)
+        self.renderer.setup_sensor(0)
 
 
         self.count = 0
@@ -81,7 +81,7 @@ class OcclusionDetectorNode:
         image = self.bridge.imgmsg_to_cv2(image, 'bgr8')
 
         # Plot real image against rendered image
-        render = self.detector.get_rendered_image()
+        render = self.renderer.get_rendered_image()
         fig = plt.gcf()
         ax1 = fig.add_subplot(1,2,0)
         ax1.imshow(image)
@@ -105,10 +105,10 @@ class OcclusionDetectorNode:
         """
         positions = joint_state.position
         joint_angles = [angle for angle in positions[:-1]]
-        self.detector.set_joint_angles(joint_angles)
+        self.renderer.set_joint_angles(joint_angles)
 
 
 if __name__ == '__main__':
     show_render = rospy.get_param('show_render')
-    node = OcclusionDetectorNode(show_render)
+    node = OcclusionRendererNode(show_render)
     node.spin()

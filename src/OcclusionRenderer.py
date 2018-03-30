@@ -3,7 +3,7 @@
 """
 @author: edwardahn
 
-This file defines the class OcclusionDetector, which lets users
+This file defines the class OcclusionRenderer, which lets users
 view a camera-rendered image for the purpose of spotting occlusions
 to the end effector.
 """
@@ -14,7 +14,7 @@ import numpy as np
 from openravepy import *
 
 
-class OcclusionDetector:
+class OcclusionRenderer:
     """
     This class uses OpenRAVE and offscreen_render to render the image
     the camera on top of the Sawyer arm views. From this image it is
@@ -24,7 +24,7 @@ class OcclusionDetector:
 
     def __init__(self, sawyer_dae):
         """
-        Instantiates the OcclusionDetector class and initializes
+        Instantiates the OcclusionRenderer class and initializes
         the OpenRAVE environment.
 
         Args:
