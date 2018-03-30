@@ -47,14 +47,10 @@ class OcclusionRenderer:
         self.sensor.SetTransform(tf)
 
 
-    def setup_sensor(self, intrinsics): ####### Not using intrinsics atm ######
+    def setup_sensor(self):
         """
         Create camera sensor using offscreen_render and set its
         extrinsics and intrinsics.
-
-        Args:
-            intrinsics: Camera intrinsics as a list
-                (fx, fy, cx, cy, near, far)
         """
         self.sensor = RaveCreateSensor(self.env,
                 'offscreen_render_camera')

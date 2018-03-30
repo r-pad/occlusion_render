@@ -24,11 +24,10 @@ class OcclusionRendererNode:
     handles ROS functionality.
     """
 
-    def __init__(self, show_render):
+    def __init__(self):
         """
         Initialize and run node responsible for occlusion rendering.
         """
-        self.show_render = show_render
         self.bridge = CvBridge()
         rospy.init_node('occlusion_renderer')
 
@@ -36,12 +35,7 @@ class OcclusionRendererNode:
         self.pkg_path = rospkg.RosPack().get_path('occlusion_render')
         sawyer_dae = '%s/models/sawyer.dae' % self.pkg_path
         self.renderer = OcclusionRenderer(sawyer_dae)
-
-
-
-        self.renderer.setup_sensor(0)
-
-
+        self.renderer.setup_sensor()
 
         # Publish renders onto topic
         self.publisher = rospy.Publisher(
@@ -92,6 +86,5 @@ class OcclusionRendererNode:
 
 
 if __name__ == '__main__':
-    show_render = rospy.get_param('show_render')
-    node = OcclusionRendererNode(show_render)
+    node = OcclusionRendererNode()
     rospy.spin()
