@@ -20,7 +20,7 @@ roslaunch occlusion_render render.launch
 The results below show the image from the camera, and the rendering produced by this package.
 ![alt text](https://raw.githubusercontent.com/r-pad/occlusion_render/master/result1.png)
 ![alt text](https://raw.githubusercontent.com/r-pad/occlusion_render/master/result2.png)
-![alt text](https://raw.githubusercontent.com/r-pad/occlusion_render/master/result3.png)
+![alt text](results/result3.png?raw=true "Sample Result 3")
 
 ## Future Work
 We intend to develop the package [occlusion_detect](https://github.com/r-pad/occlusion_detect), which will subscribe to the rendered images to produce a binary output determining whether the end effector is too occluded in an image to be useful for other purposes.
