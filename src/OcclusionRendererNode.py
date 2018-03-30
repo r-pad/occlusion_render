@@ -9,8 +9,6 @@ Internally, the class OcclusionRenderer is used to render output
 images.
 """
 
-import argparse
-
 import message_filters
 import rospkg
 import rospy
@@ -18,9 +16,6 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image, CameraInfo, JointState
 
 from OcclusionRenderer import OcclusionRenderer
-
-
-import matplotlib.pyplot as plt
 
 
 class OcclusionRendererNode:
@@ -42,11 +37,15 @@ class OcclusionRendererNode:
         sawyer_dae = '%s/models/sawyer.dae' % self.pkg_path
         self.renderer = OcclusionRenderer(sawyer_dae)
 
+
+
         self.renderer.setup_sensor(0)
 
 
-        self.count = 0
 
+        # Publish renders onto topic
+        self.publisher = rospy.Publisher(
+                '/pose_image/occlusion_render', Image, queue_size=1)
 
         # Register callback subscribing to image and camera info
         image_sub = message_filters.Subscriber(
@@ -54,7 +53,7 @@ class OcclusionRendererNode:
         info_sub = message_filters.Subscriber(
                 '/pose_image/camera_info', CameraInfo)
         image_sync = message_filters.TimeSynchronizer(
-                [image_sub, info_sub], 10)
+                [image_sub, info_sub], 1)
         image_sync.registerCallback(self.image_callback)
 
         # Register callback subscribing to joint angles
@@ -62,36 +61,20 @@ class OcclusionRendererNode:
                 self.joints_callback)
 
 
-    def spin(self):
-        """
-        Spin, waiting for callbacks.
-        """
-        rospy.spin()
-
-
     def image_callback(self, image, camera_info):
         """
-        Change intrinsics of camera and render camera's image view.
+        Publish rendering of camera's image view. Note that the
+        original image and camera info are not used, but we subscribe
+        to them since the rendering must be published at the same
+        timestamp as the image.
 
         Args:
             image: Image that the camera actually sees (ground truth)
             camera_info: Camera information (ex. intrinsics)
         """
-        print 'Processing image %d...' % self.count
-        image = self.bridge.imgmsg_to_cv2(image, 'bgr8')
-
-        # Plot real image against rendered image
         render = self.renderer.get_rendered_image()
-        fig = plt.gcf()
-        ax1 = fig.add_subplot(1,2,0)
-        ax1.imshow(image)
-        ax2 = fig.add_subplot(1,2,1)
-        ax2.imshow(render, origin='lower')
-        path = '%s/results/fig%d.png' % (self.pkg_path, self.count)
-        plt.savefig(path)
-        self.count += 1
-        if self.show_render:
-            plt.show()
+        image_message = self.bridge.cv2_to_imgmsg(render, 'rgb8')
+        self.publisher.publish(image_message)
 
 
     def joints_callback(self, joint_state):
@@ -111,4 +94,4 @@ class OcclusionRendererNode:
 if __name__ == '__main__':
     show_render = rospy.get_param('show_render')
     node = OcclusionRendererNode(show_render)
-    node.spin()
+    rospy.spin()

@@ -102,5 +102,6 @@ class OcclusionRenderer:
             raise RuntimeError('Sensor not set up')
         self.sensor.SimulationStep(0.01)
         data = self.sensor.GetSensorData()
-        return data.imagedata
+        image = np.flipud(data.imagedata)
+        return image
 
