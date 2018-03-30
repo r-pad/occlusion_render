@@ -68,6 +68,7 @@ class OcclusionRendererNode:
         """
         render = self.renderer.get_rendered_image()
         image_message = self.bridge.cv2_to_imgmsg(render, 'rgb8')
+        image_message.header.stamp = image.header.stamp
         self.publisher.publish(image_message)
 
 
