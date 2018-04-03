@@ -6,10 +6,12 @@
         Render camera image to determine if gripper is occluded by arm.
     </description>
 
-    <url type="repository">WEBSITE</url>
+    <url type="repository">
+        https://github.com/r-pad/occlusion_render
+    </url>
 
     <maintainer email="edwardahn@cmu.edu">Edward Ahn</maintainer>
-    <license>UNRELEASED</license>
+    <license>MIT</license>
 
     <author email="edwardahn@cmu.edu">Edward Ahn</author>
 
